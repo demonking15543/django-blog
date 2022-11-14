@@ -2,7 +2,9 @@ from .models import Post
 
 
 def my_blogs(request):
-    my_blogs = Post.objects.filter(author=request.user)[:3]
+    my_blogs = Post.objects.filter(author=request.user)
+    if len(my_blogs) > 3:
+        my_blogs=my_blogs[::3]
 
     return {
         'my_blogs': my_blogs,
