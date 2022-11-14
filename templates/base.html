@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% comment %} #Boot strap css CDN {% endcomment %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    {% block title %}
+    <title>My Blog</title>  
+    {% endblock title %}
+
+</head>
+  <body>
+    {% comment %} #Navbar {% endcomment %}
+    <div>
+        {% include  'navbar.html' %}
+    </div>
+    {% comment %} #main content {% endcomment %}
+
+    <main class="container my-4">
+
+        <div class="row">
+            {% block content %}
+
+            <div class="col-lg-9">
+            {% for post in page_obj.object_list %}
+            <div class="card mb-4" onclick="location.href='{{post.get_absolute_url}}';" style="cursor: pointer;">
+                <div class="card-body">
+                  <h5 class="card-title text-info">{{post.title}}</h5>
+                  <p class="card-text">{{post.description|truncatewords:30}}</p>
+                </div>
+              </div>
+            {% endfor %}
+
+            </div>
+            
+            {% endblock %}
+
+            <div class="col-lg-3">
+                <div class="card text-bg-secondary mb-3" style="max-width: 18rem;">
+                    <div class="card-header">
+                        <h2>My Blogs</h2>
+                        <p class="fst-italic">Your last 3 posts</p>
+                    </div>
+                    
+
+                </div>
+                {% for myblog in my_blogs  %}
+
+                <div class="card text-bg-light mb-2" style="max-width: 18rem; cursor: pointer;" onclick="location.href='{{myblog.get_absolute_url}}';">
+
+                    <div class="card-body">
+                      <h6 class="card-title text-info ">{{myblog.title|truncatechars:20}}</h6>
+                      <p class="card-text">{{myblog.description|truncatewords:10}}</p>
+
+                      <p class=""><span class="fst-italic">Published {{myblog.updated_at}}</span></p>
+
+
+                    </div>
+                </div>
+                {% endfor %}
+
+
+                  
+
+            </div>
+
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{page_obj.previous_page_number}}">Previous</a>
+              </li>
+              {% endif %}
+              {% for i in page_obj.paginator.page_range  %}
+              {% if page_obj.number == i %}
+              <li class="page-item active" aria-current="page"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+               {% else %}
+               <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+
+              {% endif %}
+              {% endfor %}
+
+              {% if  page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{page_obj.next_page_number}}">Next</a>
+              </li>
+              {% endif %}
+            </ul>
+          </nav>
+          
+ 
+    </main>
+
+    {% comment %} #Footer {% endcomment %}
+    <div>Footer</div>
+
+
+
+    {% comment %} #Bootstrap Javascript CDNs {% endcomment %}
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>  </body>
+</html>
