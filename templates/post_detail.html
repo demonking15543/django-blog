@@ -60,6 +60,21 @@
 
             </div>
 
+            <div class="card-body">
+                {% if new_comment %}
+                <div class="alert alert-success" role="alert">
+                  Your comment is awaiting moderation
+                </div>
+                {% else %}
+                <h3>Leave a comment</h3>
+                <form method="post" style="margin-top: 1.3em;">
+                  {{ comment_form.as_p }}
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-primary  btn-lg">Submit</button>
+                </form>
+                {% endif %}
+              </div>
+
             <div class="p-4">
                 <h5>{{comments|length}} comment{{comments|pluralize}}</h5>
                 {% for comment in comments %}
@@ -67,7 +82,6 @@
                     <div class="card-body">
                       <h6 class="card-title" style="font-size: 15px;">commented by {{comment.name}}, {{comment.created_at}}</h6>
                       <p class="card-text">{{comment.content|linebreaks}}</p>
-                      <a href="#" class="btn btn-primary">Button</a>
                     </div>
                   </div>
                 {% endfor %}

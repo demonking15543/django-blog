@@ -45,7 +45,7 @@ def post_detail(request, pk, slug):
 
 
 
-    comments = post.post_comment.filter(active=True)
+    comments = post.post_comment.all()
     new_comment = None
     # Comment posted
     if request.method == 'POST':
@@ -94,3 +94,8 @@ def BlogPostLike(request, pk, slug):
 
 def login(request):
     return render(request, 'login.html')    
+
+
+
+
+
