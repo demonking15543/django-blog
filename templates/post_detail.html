@@ -30,6 +30,23 @@
             </div>
             <p class="p-2 text-info">Share with:</p>
 
+            <div>
+                {% if user.is_authenticated %}
+                    <form action="{% url 'pages:post_like' post.id post.slug %}" method="POST">
+                      {% csrf_token %}
+                
+                      {% if post_is_liked %}
+                      <button type="submit" name="blogpost_id" value="{{post.id}}" class="btn btn-info"><i class="fas fa-thumbs-up"></i></button>
+                      {% else %}
+                      <button type="submit" name="blogpost_id" value="{{post.id}}" class="btn btn-info"><i class="fas fa-thumbs-down"></i></button>
+                      {% endif %}
+                    </form>
+                    {% else %}
+                      <a class="btn btn-outline-info" href="{% url 'login' %}?next={{request.path}}">Log in to like this article!</a><br>
+                    {% endif %}
+                    <strong class="text-secondary">{{ number_of_likes }} Like{{ number_of_likes|pluralize }}</strong>
+            </div>
+
             <div class="share-button d-flex  justify-content-between" style="max-width: 160px;" >
                 <a  class="facebook" target="_blank"><i class="fab fa-facebook fa-2x"></i></a>
                 <a  class="twitter text-info" target="_blank"><i class="fab fa-twitter fa-2x"></i></a>
@@ -41,6 +58,19 @@
 
 
 
+            </div>
+
+            <div class="p-4">
+                <h5>{{comments|length}} comment{{comments|pluralize}}</h5>
+                {% for comment in comments %}
+                <div class="card w-50 mb-2">
+                    <div class="card-body">
+                      <h6 class="card-title" style="font-size: 15px;">commented by {{comment.name}}, {{comment.created_at}}</h6>
+                      <p class="card-text">{{comment.content|linebreaks}}</p>
+                      <a href="#" class="btn btn-primary">Button</a>
+                    </div>
+                  </div>
+                {% endfor %}
             </div>
             
 

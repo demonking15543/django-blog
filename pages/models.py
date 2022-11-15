@@ -26,6 +26,8 @@ class Post(DateTime):
     slug = models.SlugField(max_length=300, verbose_name=_('Post Slug'))
     description=models.TextField(_("Describe your post here..."), max_length=3000)
     status=models.CharField(max_length=7,choices=STATUS, default='Draft')
+    likes = models.ManyToManyField(User, related_name='post_like')
+
     
 
     
@@ -48,7 +50,8 @@ class Post(DateTime):
     def get_absolute_url(self):
         return reverse("pages:post_detail", kwargs={"pk": self.pk, "slug":self.slug})
         
-
+    def number_of_likes(self):
+        return self.likes.count()
 
 
 
@@ -59,12 +62,12 @@ class Post(DateTime):
 
 class Comment(DateTime):
     post = models.ForeignKey(Post, related_name="post_comment", on_delete=models.CASCADE)  
-    author=models.ForeignKey(User, related_name="comment_author", on_delete=models.CASCADE)    
     email=models.EmailField(max_length=255)
     name=models.CharField(max_length=150)
     content=models.TextField(_("Please Post Your Comment here..."), max_length=150)
 
-    
+    active = models.BooleanField(default=False)
+
 
     
 
