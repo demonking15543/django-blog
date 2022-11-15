@@ -28,6 +28,17 @@
             <div class="panel-body lh-lg fw-light">
                 {{post.description}}
             </div>
+            <p class="p-2 text-info">Share with:</p>
+
+            <div class="share-button d-flex  justify-content-between" style="max-width: 140px;" >
+                <a  class="facebook" target="_blank"><i class="fab fa-facebook fa-2x"></i></a>
+                <a  class="twitter" target="_blank"><i class="fab fa-twitter fa-2x"></i></a>
+                <a class="linkedin" target="_blank"><i class="fab fa-linkedin fa-2x"></i></a>
+
+
+
+
+            </div>
             
 
         </div>
@@ -38,3 +49,17 @@
 
 
 {% endblock content %}
+{% block script %}
+<script>
+const link = encodeURI(window.location.href);
+const msg = encodeURIComponent('{{post.desciption}}');
+const title = encodeURIComponent('{{post.title}}');
+const linkedIn = document.querySelector('.linkedin')
+linkedIn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${link}`;
+
+
+
+
+</script>
+{% endblock script %}
+
