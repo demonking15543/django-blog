@@ -80,7 +80,7 @@
             <div class="p-4">
                 <h5>{{comments|length}} comment{{comments|pluralize}}</h5>
                 {% for comment in comments %}
-                <div class="card w-50 mb-2">
+                <div class="card w-100 w-md-50 mb-2">
                     <div class="card-body">
                       <h6 class="card-title" style="font-size: 15px;">commented by {{comment.name}}, {{comment.created_at}}</h6>
                       <p class="card-text">{{comment.content|linebreaks}}</p>
