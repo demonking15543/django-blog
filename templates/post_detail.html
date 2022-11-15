@@ -30,11 +30,14 @@
             </div>
             <p class="p-2 text-info">Share with:</p>
 
-            <div class="share-button d-flex  justify-content-between" style="max-width: 140px;" >
+            <div class="share-button d-flex  justify-content-between" style="max-width: 160px;" >
                 <a  class="facebook" target="_blank"><i class="fab fa-facebook fa-2x"></i></a>
-                <a  class="twitter" target="_blank"><i class="fab fa-twitter fa-2x"></i></a>
+                <a  class="twitter text-info" target="_blank"><i class="fab fa-twitter fa-2x"></i></a>
                 <a class="linkedin" target="_blank"><i class="fab fa-linkedin fa-2x"></i></a>
-
+                <a href="mailto:?subject=Checkout my new article on site&amp;body={{ request.build_absolute_uri }}"
+                title="Share by Email">
+                <i class="fa-solid fa-envelope fa-2x"></i>            
+             </a>
 
 
 
