@@ -84,6 +84,54 @@
                     <div class="card-body">
                       <h6 class="card-title" style="font-size: 15px;">commented by {{comment.name}}, {{comment.created_at}}</h6>
                       <p class="card-text">{{comment.content|linebreaks}}</p>
+
+
+
+                      {% comment %} nested comment {% endcomment %}
+                      <div class="d-flex flex-row-reverse py-3">
+                        <p class="card-text">{{comment.comment_nestedcomment.all|length}} {% if comment.comment_nestedcomment.all|length > 1  %}Replies {% else %}Reply{% endif %}</p>
+
+                      </div>
+
+
+
+                      {% for nested_comment in comment.comment_nestedcomment.all|slice:"10"  %}
+                      <div>
+                        <figure class="text-end">
+                            <blockquote class="blockquote">
+                              <p style="font-size: 0.75rem ;"><small>{{nested_comment.name}}. {{nested_comment.created_at|timesince}} ago</small></p>
+                            </blockquote>
+                            <figcaption class="blockquote-footer">
+                               <cite title="Source Title">{{nested_comment.content}}</cite>
+                            </figcaption>
+                          </figure>
+                      </div>
+
+                      {% endfor %}
+                     
+                     
+                      <p class="float-end">
+                        <a class=" btn btn-secondary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                          comment
+                         </a>
+                       
+                      </p>
+                      <div class="collapse" id="collapseExample" style="margin-top:3.4rem !important;">
+                        <div class="card card-body">
+                            <form action="{% url 'pages:nested_comment' %}" method="post">
+
+                                {% csrf_token %}
+                                {{nested_comment_form.as_p}}
+                                <input type="text" name="post_id" value="{{post.id}}" hidden>
+                                <input type="text" name="comment_id" value="{{comment.id}}" hidden>
+
+                                <button type="submit" class="btn btn-primary  btn-sm">Submit</button>
+
+
+                            </form>
+                            
+                        </div>
+                      </div>
                     </div>
                   </div>
                 {% endfor %}

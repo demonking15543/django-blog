@@ -18,3 +18,11 @@ class CommentAdmin(admin.ModelAdmin):
 
     def approve_comments(self, request, queryset):
         queryset.update(active=True)
+
+
+@admin.register(models.NeastedComment)
+class NeastedCommentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'content', 'post', 'created_at',)
+    list_filter = ('created_at',)
+    search_fields = ('name', 'email', 'content', )
+

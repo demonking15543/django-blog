@@ -18,6 +18,8 @@ class DateTime(models.Model):
 STATUS = (
     ("Draft","Draft"),
     ("Publish","Publish")
+
+
 )
 
 class Post(DateTime):
@@ -74,6 +76,32 @@ class Comment(DateTime):
     class Meta:
         verbose_name = _("Comment")
         verbose_name_plural = _("Comments")
+        ordering=['-created_at']
+
+    def __str__(self):
+        return self.name
+    
+
+    
+        
+
+
+
+class NeastedComment(DateTime):
+    post = models.ForeignKey(Post, related_name="post_nestedcomment", on_delete=models.CASCADE)  
+
+    comment = models.ForeignKey(Comment, related_name="comment_nestedcomment", on_delete=models.CASCADE)  
+    email=models.EmailField(max_length=255)
+    name=models.CharField(max_length=150)
+    content=models.TextField(_("Please Post Your Comment here..."), max_length=150)
+
+
+
+    
+
+    class Meta:
+        verbose_name = _("NeastedComment")
+        verbose_name_plural = _("NeastedComments")
         ordering=['-created_at']
 
     def __str__(self):

@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from . import models
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from .forms import CommentForm
+from .forms import CommentForm, NeastedCommentForm
 
 # Create your views here.
 
@@ -64,6 +64,8 @@ def post_detail(request, pk, slug):
     liked = False
     if post.likes.filter(id=request.user.id).exists():
         liked = True
+    nested_comment_form = NeastedCommentForm()
+     
     
 
     
@@ -74,7 +76,8 @@ def post_detail(request, pk, slug):
         'new_comment': new_comment,
         'comment_form': comment_form,
         'number_of_likes':post.number_of_likes(),
-        'post_is_liked':liked
+        'post_is_liked':liked,
+        'nested_comment_form':nested_comment_form
     }
 
     return render(request, 'post_detail.html', context)
@@ -99,3 +102,21 @@ def login(request):
 
 
 
+
+
+
+def nested_comment(request):
+    post = get_object_or_404(models.Post, id=request.POST.get('post_id') )
+    comment = get_object_or_404(models.Comment, id=request.POST.get('comment_id') )
+
+    if request.method == 'POST':
+        form = NeastedCommentForm(request.POST)
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.post=post
+            new_comment.comment=comment
+            new_comment.save()
+
+            
+
+    return HttpResponseRedirect(reverse("pages:post_detail", args=[str(post.pk), str(post.slug)]))

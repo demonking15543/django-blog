@@ -9,6 +9,8 @@ urlpatterns =[
     path("posts/<int:pk>/<slug:slug>/", views.post_detail , name="post_detail"),
     path('blogpost-like/<int:pk>/<slug:slug>/', views.BlogPostLike, name="post_like"),
     path('login/', views.login, name="login"),
+    path('nested-comment/', views.nested_comment, name="nested_comment"),
+
 
 
 
