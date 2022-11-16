@@ -1,171 +1,201 @@
-{% extends "base.html" %}
-
-{% block title %}
+{% extends "base.html" %} {% block title %}
 
 <title>{{post.title}}</title>
-{% endblock title %}
+{% endblock title %} {% block content %}
 
-
-{% block content %}
-  
-
-	<div class="col-lg-9">
-		<div id="postlist">
-			<div class="panel">
-                <div class="panel-heading">
-                    <div class="text-center">
-                        <div class="row">
-                            <div class="col-sm-12 text-start">
-                                <h3 class="text-info">{{post.title}}</h3>
-                                <p class=""><span class="fst-italic">Published {{post.updated_at}}</span> by <span class="badge rounded-pill text-bg-secondary">{{post.author.username}}</span></p>
-                            </div>
-                            <hr/>
-
-                        </div>
-                    </div>
-                </div>
-                
-            <div class="panel-body lh-lg fw-light">
-                {{post.description}}
+<div class="col-lg-9">
+  <div id="postlist">
+    <div class="panel">
+      <div class="panel-heading">
+        <div class="text-center">
+          <div class="row">
+            <div class="col-sm-12 text-start">
+              <h3 class="text-info">{{post.title}}</h3>
+              <p class="">
+                <span class="fst-italic">Published {{post.updated_at}}</span> by
+                <span class="badge rounded-pill text-bg-secondary"
+                  >{{post.author.username}}</span
+                >
+              </p>
             </div>
-            <p class="p-2 text-info">Share with:</p>
-            <div class="share-button d-flex mb-4 justify-content-between" style="max-width: 160px;" >
-                <a  class="facebook" target="_blank"><i class="fab fa-facebook fa-2x"></i></a>
-                <a  class="twitter text-info" target="_blank"><i class="fab fa-twitter fa-2x"></i></a>
-                <a class="linkedin" target="_blank"><i class="fab fa-linkedin fa-2x"></i></a>
-                <a href="mailto:?subject=Checkout my new article on site&amp;body={{ request.build_absolute_uri }}"
-                title="Share by Email">
-                <i class="fa-solid fa-envelope fa-2x"></i>            
-             </a>
-
-
-
-            </div>
-
-
-            <div>
-                {% if user.is_authenticated %}
-                    <form action="{% url 'pages:post_like' post.id post.slug %}" method="POST">
-                      {% csrf_token %}
-                
-                      {% if post_is_liked %}
-                      <button type="submit" name="blogpost_id" value="{{post.id}}" class="btn btn-info"><i class="fas fa-thumbs-down"></i></button>
-                       
-                      {% else %}
-                      <button type="submit" name="blogpost_id" value="{{post.id}}" class="btn btn-info"><i class="fas fa-thumbs-up"></i></button>
-                      {% endif %}
-                    </form>
-                    {% else %}
-                      <a class="btn btn-outline-info" href="{% url 'pages:login' %}?next={{request.path}}">Log in to like this article!</a><br>
-                    {% endif %}
-                    <strong class="text-secondary">{{ number_of_likes }} Like{{ number_of_likes|pluralize }}</strong>
-            </div>
-
-            
-            <div class="card-body">
-                {% if new_comment %}
-                <div class="alert alert-success" role="alert">
-                  Your comment is awaiting moderation
-                </div>
-                {% else %}
-                <h3>Leave a comment</h3>
-                <form method="post" style="margin-top: 1.3em;">
-                  {{ comment_form.as_p }}
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-primary  btn-lg">Submit</button>
-                </form>
-                {% endif %}
-              </div>
-
-            <div class="p-4">
-                <h5>{{comments|length}} comment{{comments|pluralize}}</h5>
-                {% for comment in comments %}
-                <div class="card w-100 w-md-50 mb-2">
-                    <div class="card-body">
-                      <h6 class="card-title" style="font-size: 15px;">commented by {{comment.name}}, {{comment.created_at}}</h6>
-                      <p class="card-text">{{comment.content|linebreaks}}</p>
-
-
-
-                      {% comment %} nested comment {% endcomment %}
-                      <div class="d-flex flex-row-reverse py-3">
-                        <p class="card-text">{{comment.comment_nestedcomment.all|length}} {% if comment.comment_nestedcomment.all|length > 1  %}Replies {% else %}Reply{% endif %}</p>
-
-                      </div>
-
-
-
-                      {% for nested_comment in comment.comment_nestedcomment.all|slice:"10"  %}
-                      <div>
-                        <figure class="text-end">
-                            <blockquote class="blockquote">
-                              <p style="font-size: 0.75rem ;"><small>{{nested_comment.name}}. {{nested_comment.created_at|timesince}} ago</small></p>
-                            </blockquote>
-                            <figcaption class="blockquote-footer">
-                               <cite title="Source Title">{{nested_comment.content}}</cite>
-                            </figcaption>
-                          </figure>
-                      </div>
-
-                      {% endfor %}
-                     
-                     
-                      <p class="float-end">
-                        <a class=" btn btn-secondary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                          comment
-                         </a>
-                       
-                      </p>
-                      <div class="collapse" id="collapseExample" style="margin-top:3.4rem !important;">
-                        <div class="card card-body">
-                            <form action="{% url 'pages:nested_comment' %}" method="post">
-
-                                {% csrf_token %}
-                                {{nested_comment_form.as_p}}
-                                <input type="text" name="post_id" value="{{post.id}}" hidden>
-                                <input type="text" name="comment_id" value="{{comment.id}}" hidden>
-
-                                <button type="submit" class="btn btn-primary  btn-sm">Submit</button>
-
-
-                            </form>
-                            
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                {% endfor %}
-            </div>
-            
-
+            <hr />
+          </div>
         </div>
-        
+      </div>
 
+      <div class="panel-body lh-lg fw-light">{{post.description}}</div>
+      <p class="p-2 text-info">Share with:</p>
+      <div
+        class="share-button d-flex mb-4 justify-content-between"
+        style="max-width: 160px"
+      >
+        <a class="facebook" target="_blank"
+          ><i class="fab fa-facebook fa-2x"></i
+        ></a>
+        <a class="twitter text-info" target="_blank"
+          ><i class="fab fa-twitter fa-2x"></i
+        ></a>
+        <a class="linkedin" target="_blank"
+          ><i class="fab fa-linkedin fa-2x"></i
+        ></a>
+        <a
+          href="mailto:?subject=Checkout my new article on site&amp;body={{ request.build_absolute_uri }}"
+          title="Share by Email"
+        >
+          <i class="fa-solid fa-envelope fa-2x"></i>
+        </a>
+      </div>
+
+      <div>
+        {% if user.is_authenticated %}
+        <form
+          action="{% url 'pages:post_like' post.id post.slug %}"
+          method="POST"
+        >
+          {% csrf_token %} {% if post_is_liked %}
+          <button
+            type="submit"
+            name="blogpost_id"
+            value="{{post.id}}"
+            class="btn btn-info"
+          >
+            <i class="fas fa-thumbs-down"></i>
+          </button>
+
+          {% else %}
+          <button
+            type="submit"
+            name="blogpost_id"
+            value="{{post.id}}"
+            class="btn btn-info"
+          >
+            <i class="fas fa-thumbs-up"></i>
+          </button>
+          {% endif %}
+        </form>
+        {% else %}
+        <a
+          class="btn btn-outline-info"
+          href="{% url 'pages:login' %}?next={{request.path}}"
+          >Log in to like this article!</a
+        ><br />
+        {% endif %}
+        <strong class="text-secondary"
+          >{{ number_of_likes }} Like{{ number_of_likes|pluralize }}</strong
+        >
+      </div>
+
+      <div class="card-body">
+        {% if new_comment %}
+        <div class="alert alert-success" role="alert">
+          Your comment is awaiting moderation
+        </div>
+        {% else %}
+        <h3>Leave a comment</h3>
+        <form method="post" style="margin-top: 1.3em">
+          {{ comment_form.as_p }} {% csrf_token %}
+          <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+        </form>
+        {% endif %}
+      </div>
+
+      <div class="p-4">
+        <h5>{{comments|length}} comment{{comments|pluralize}}</h5>
+        {% for comment in comments %}
+        <div class="card w-100 w-md-50 mb-2">
+          <div class="card-body">
+            <h6 class="card-title" style="font-size: 15px">
+              commented by {{comment.name}}, {{comment.created_at}}
+            </h6>
+            <p class="card-text">{{comment.content|linebreaks}}</p>
+
+            {% comment %} nested comment {% endcomment %}
+            <div class="d-flex flex-row-reverse py-3">
+              <p class="card-text">
+                {{comment.comment_nestedcomment.all|length}} 
+                {% if comment.comment_nestedcomment.all|length > 1 %}Replies {% else %}Reply{% endif %}
+              </p>
+            </div>
+
+            {% for nested_comment in  comment.comment_nestedcomment.all|slice:"10" %}
+            <div>
+              <figure class="text-end">
+                <blockquote class="blockquote">
+                  <p style="font-size: 0.75rem">
+                    <small
+                      >{{nested_comment.name}}.
+                      {{nested_comment.created_at|timesince}} ago</small
+                    >
+                  </p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                  <cite title="Source Title">{{nested_comment.content}}</cite>
+                </figcaption>
+              </figure>
+            </div>
+
+            {% endfor %}
+
+            <p class="float-end">
+              <a
+                class="btn btn-secondary"
+                data-bs-toggle="collapse"
+                href="#collapseExample"
+                role="button"
+                aria-expanded="false"
+                aria-controls="collapseExample"
+              >
+                comment
+              </a>
+            </p>
+            <div
+              class="collapse"
+              id="collapseExample"
+              style="margin-top: 3.4rem !important"
+            >
+              <div class="card card-body">
+                <form action="{% url 'pages:nested_comment' %}" method="post">
+                  {% csrf_token %} {{nested_comment_form.as_p}}
+                  <input
+                    type="text"
+                    name="post_id"
+                    value="{{post.id}}"
+                    hidden
+                  />
+                  <input
+                    type="text"
+                    name="comment_id"
+                    value="{{comment.id}}"
+                    hidden
+                  />
+
+                  <button type="submit" class="btn btn-primary btn-sm">
+                    Submit
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
     </div>
+  </div>
 </div>
 
-
-{% endblock content %}
-{% block script %}
+{% endblock content %} {% block script %}
 <script>
-const link = encodeURI(window.location.href);
-const msg = encodeURIComponent('{{post.desciption}}');
-const title = encodeURIComponent('{{post.title}}');
+  const link = encodeURI(window.location.href);
+  const msg = encodeURIComponent("{{post.desciption}}");
+  const title = encodeURIComponent("{{post.title}}");
 
-const facebook = document.querySelector('.facebook')
-facebook.href = `https://www.facebook.com/share.php?u=${link}`;
+  const facebook = document.querySelector(".facebook");
+  facebook.href = `https://www.facebook.com/share.php?u=${link}`;
 
-const twitter = document.querySelector('.twitter')
-twitter.href = `https://twitter.com/intent/tweet?url=${link}&text="{{post.title}}"`;
+  const twitter = document.querySelector(".twitter");
+  twitter.href = `https://twitter.com/intent/tweet?url=${link}&text="{{post.title}}"`;
 
-
-
-const linkedIn = document.querySelector('.linkedin')
-linkedIn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${link}`;
-
-
-
-
+  const linkedIn = document.querySelector(".linkedin");
+  linkedIn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${link}`;
 </script>
 {% endblock script %}
-

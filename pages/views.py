@@ -4,7 +4,7 @@ from django.urls import reverse
 from . import models
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from .forms import CommentForm, NeastedCommentForm
-
+from django.contrib.auth.views import LogoutView
 # Create your views here.
 
 
@@ -66,10 +66,7 @@ def post_detail(request, pk, slug):
         liked = True
     nested_comment_form = NeastedCommentForm()
      
-    
-
-    
-    
+       
     context = {
         'post': post,
         'comments': comments,
@@ -95,13 +92,9 @@ def BlogPostLike(request, pk, slug):
 
 
 
-def login(request):
-    return render(request, 'login.html')    
-
-
-
-
-
+def Logout(request):
+    LogoutView()
+    return HttpResponseRedirect(reverse('login'))   
 
 
 
