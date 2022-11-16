@@ -4,7 +4,7 @@ from django.urls import reverse
 from . import models
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from .forms import CommentForm, NeastedCommentForm
-from django.contrib.auth.views import LogoutView
+from django.contrib.auth import logout
 # Create your views here.
 
 
@@ -93,7 +93,7 @@ def BlogPostLike(request, pk, slug):
 
 
 def Logout(request):
-    LogoutView()
+    logout(request)
     return HttpResponseRedirect(reverse('login'))   
 
 
