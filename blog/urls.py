@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from pages import views as pages_views
 urlpatterns = [
     path('admin/', include('admin_honeypot.urls', namespace='admin_honeypot')),
 
@@ -26,6 +26,7 @@ urlpatterns = [
 ]
 urlpatterns += [
     path('accounts/', include('django.contrib.auth.urls')),
+
 
 ]
 

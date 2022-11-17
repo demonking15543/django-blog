@@ -9,7 +9,13 @@
     {% block title %}
     <title>My Blog</title>  
     {% endblock title %}
-
+    <style>
+      ul.errorlist li{
+        list-style: none;
+        color: red;
+      }
+    </style>
+   
 </head>
   <body>
     {% comment %} #Navbar {% endcomment %}
@@ -19,6 +25,14 @@
     {% comment %} #main content {% endcomment %}
 
     <main class="container my-4">
+      {% if messages %}
+      <ul class="list-group">
+          {% for message in messages %}
+          <li {% if message.tags %} class="list-group-item list-group-item-{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+      </ul>
+      {% endif %}
+
 
         <div class="row">
             {% block content %}
@@ -42,13 +56,15 @@
                     <div class="card-header">
                         <h2>My Blogs</h2>
                         <p class="fst-italic">Your last 3 posts</p>
+                        
                     </div>
                     
 
                 </div>
                 {% for myblog in my_blogs  %}
 
-                <div class="card text-bg-light mb-2" style="max-width: 18rem; cursor: pointer;" onclick="location.href='{{myblog.get_absolute_url}}';">
+                <div class="card text-bg-light mb-2" style="max-width: 18rem; cursor: pointer;" 
+                onclick="{% if myblog.status == 'Publish' %}location.href='{{myblog.get_absolute_url}}';{% else %}location.href='{% url 'pages:post_update' myblog.pk myblog.slug %}';{% endif %}">
 
                     <div class="card-body">
                       <h6 class="card-title text-info ">{{myblog.title|truncatechars:20}}</h6>
@@ -56,6 +72,13 @@
 
                       <p class=""><span class="fst-italic">Published {{myblog.updated_at}}</span></p>
 
+                      <div class="d-flex w-50 justify-content-between text-end">
+                         <span class="text-secondary">{{myblog.status}}</span>
+                        <a href="{% url 'pages:post_update' myblog.pk myblog.slug %}"><i class="fas fa-edit text-primary"></i></a>
+                        <a href="{% url 'pages:post_remove' myblog.pk myblog.slug %}"><i class="fas fa-trash text-danger"></i></a>
+
+
+                       </div>
 
                     </div>
                 </div>

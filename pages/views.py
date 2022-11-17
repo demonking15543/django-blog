@@ -3,8 +3,10 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from . import models
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from .forms import CommentForm, NeastedCommentForm
-from django.contrib.auth import logout
+from .forms import CommentForm, NeastedCommentForm, UserForm, ArticleForm
+from django.contrib.auth import logout, login
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
@@ -79,6 +81,68 @@ def post_detail(request, pk, slug):
 
     return render(request, 'post_detail.html', context)
 
+@login_required
+def post_create(request):
+
+    context = {}
+    form = ArticleForm(request.POST or None)
+    context['form'] = form 
+    
+    if request.method == 'POST':
+        if form.is_valid():
+            new_post=form.save(commit=False)
+            new_post.author=request.user
+
+            new_post.save()
+            if new_post.status=="Publish":
+                messages.success(request, f"Success, Your article {new_post.title} has been published.")
+            else:
+                messages.success(request, f"Success, Your article {new_post.title} has been drafted.")
+
+            return HttpResponseRedirect(reverse("pages:home")) 
+    return render (request, "edit_article.html", context)            
+
+
+@login_required
+def post_update(request, pk, slug):
+    post = get_object_or_404(models.Post, pk=pk, slug=slug, author=request.user)
+
+    context = {}
+    form = ArticleForm(request.POST or None, instance=post)
+    context['form'] = form 
+    
+    if request.method == 'POST':
+        if form.is_valid():
+            new_post=form.save(commit=False)
+            new_post.author=request.user    
+            new_post.save()
+    
+
+            if new_post.status=="Publish":
+                messages.success(request, f"Success, Your article {new_post.title} has been updated and published.")
+            else:
+                messages.success(request, f"Success, Your article {new_post.title} has been updated and drafted.")
+
+            return HttpResponseRedirect(reverse("pages:home")) 
+    return render (request, "edit_article.html", context)            
+
+
+@login_required
+def post_remove(request, pk, slug):
+    post = get_object_or_404(models.Post, pk=pk, slug=slug, author=request.user)
+    title=post.title
+    post.delete()
+    messages.success(request, f"Success, article {title} has been removed.")
+    return HttpResponseRedirect(reverse("pages:home"))
+
+
+
+
+    
+
+
+
+
 
 
 def BlogPostLike(request, pk, slug):
@@ -113,3 +177,20 @@ def nested_comment(request):
             
 
     return HttpResponseRedirect(reverse("pages:post_detail", args=[str(post.pk), str(post.slug)]))
+
+
+
+
+def register_request(request):
+    context = {}
+    form = UserForm(request.POST or None)
+    context['form'] = form
+
+    if request.method == "POST":
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Registration successful." )
+            return HttpResponseRedirect(reverse("pages:home"))
+
+    return render (request, "registration/register.html", context)    

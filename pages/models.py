@@ -58,10 +58,6 @@ class Post(DateTime):
 
 
 
-
-
-
-
 class Comment(DateTime):
     post = models.ForeignKey(Post, related_name="post_comment", on_delete=models.CASCADE)  
     email=models.EmailField(max_length=255)
@@ -83,10 +79,7 @@ class Comment(DateTime):
     
 
     
-        
-
-
-
+    
 class NeastedComment(DateTime):
     post = models.ForeignKey(Post, related_name="post_nestedcomment", on_delete=models.CASCADE)  
 
